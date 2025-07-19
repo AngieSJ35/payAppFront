@@ -5,7 +5,7 @@ type ProductCardProps = {
     stock: number;
 };
 
-const ProductCard = ({ name, price, description, stock }: ProductCardProps) => {
+const ProductCard = ({ name, price, description, stock, onBuy }: ProductCardProps) => {
     return (
         <div
             style={{
@@ -68,6 +68,7 @@ const ProductCard = ({ name, price, description, stock }: ProductCardProps) => {
                         width: '50%',
                         margin: 'auto'
                     }}
+                    onClick={onBuy}
                 >
                     Pay with credit card
                 </button>

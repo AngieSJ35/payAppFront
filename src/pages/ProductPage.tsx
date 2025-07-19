@@ -3,19 +3,57 @@ import { useState, useEffect } from 'react'
 //import { saveTransaction } from '../store/transactionSlice'
 import { fetchProducts } from '../api/product';
 import ProductCard from '../components/ProductCard';
+import CreditCardModal from '../components/CreditCardModal';
 
 const HomePage = () => {
   //const dispatch = useDispatch()
   //const [amount, setAmount] = useState('')
   //const [method, setMethod] = useState('Credit Card')
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
+  const [validationError, setValidationError] = useState('');
 
   useEffect(() => {
     fetchProducts()
       .then(setProducts)
       .catch(setError);
   }, []);
+
+  const handleComprar = (product: any) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedProduct(null);
+  };
+
+  const handleSave = (data: any) => {
+    const { name, cardNumber, expiryMonth, expiryYear, cvv } = data;
+
+    const cardDigits = cardNumber.replace(/\s/g, '');
+
+    const isIncomplete =
+      !name ||
+      !cardNumber ||
+      !expiryMonth ||
+      !expiryYear ||
+      !cvv ||
+      cardDigits.length !== 16;
+
+    if (isIncomplete) {
+      setValidationError('Completa todos los campos correctamente. La tarjeta debe tener 16 dígitos.');
+      return;
+    }
+
+    console.log('Datos de tarjeta:', data);
+    console.log('Producto comprado:', selectedProduct);
+    setShowModal(false);
+  };
+
   /*   const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault()
   
@@ -30,7 +68,7 @@ const HomePage = () => {
       setMethod('Credit Card')
       alert('✅ Pago registrado correctamente')
     } */
-  console.log(error)
+
   return (
     <div/*  className="max-w-[750px] mx-auto p-4 sm:p-6" */ style={{ maxWidth: '100%', display: 'grid', placeItems: 'center' }}>
       <h1 className="text-xl font-bold mb-4 text-center" style={{ textAlign: 'center' }}>Lista de productos</h1>
@@ -62,10 +100,47 @@ const HomePage = () => {
       </form> */}
       {products.map((prod, idx) => (
         <div style={{ justifyContent: 'center' }}>
-          <ProductCard key={idx} {...prod} />
+          <ProductCard key={idx} {...prod} onBuy={() => handleComprar(prod)}
+          />
         </div>
       ))}
+      {showModal && (
+        <CreditCardModal onClose={handleCloseModal} onSave={handleSave} />
+      )}
+      {validationError != '' && (
+        <div
+          style={{
+            position: 'absolute',
+            backgroundColor: '#fee2e2',
+            color: '#b91c1c',
+            padding: '10px',
+            borderRadius: '6px',
+            marginBottom: '12px',
+            textAlign: 'center',
+            fontSize: '14px',
+            fontWeight: 500,
+            zIndex: 9999,
+          }}
+        >
+          {validationError}
+          <br></br>
+          <button
+            onClick={() => setValidationError('')}
+            style={{
+              backgroundColor: '#f3f4f6',
+              color: '#111827',
+              padding: '10px 16px',
+              borderRadius: '6px',
+              border: '1px solid #d1d5db',
+              fontWeight: 500,
+              cursor: 'pointer'
+            }}
+          >
+            OK
+          </button>
+        </div>
 
+      )}
       {/*       <p>{products[0]?.name}</p>
       <p>{products[0]?.description}</p>
       <p>{products[0]?.stock}</p> */}
