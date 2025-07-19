@@ -1,31 +1,40 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { saveTransaction } from '../store/transactionSlice'
+import { useState, useEffect } from 'react'
+//import { useDispatch } from 'react-redux'
+//import { saveTransaction } from '../store/transactionSlice'
+import { fetchProducts } from '../api/product';
+import ProductCard from '../components/ProductCard';
 
 const HomePage = () => {
-  const dispatch = useDispatch()
-  const [amount, setAmount] = useState('')
-  const [method, setMethod] = useState('Credit Card')
+  //const dispatch = useDispatch()
+  //const [amount, setAmount] = useState('')
+  //const [method, setMethod] = useState('Credit Card')
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const payment = {
-      id: crypto.randomUUID(),
-      amount: parseFloat(amount),
-      method
-    }
-
-    dispatch(saveTransaction(payment))
-    setAmount('')
-    setMethod('Credit Card')
-    alert('✅ Pago registrado correctamente')
-  }
-
+  useEffect(() => {
+    fetchProducts()
+      .then(setProducts)
+      .catch(setError);
+  }, []);
+  /*   const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault()
+  
+      const payment = {
+        id: crypto.randomUUID(),
+        amount: parseFloat(amount),
+        method
+      }
+  
+      dispatch(saveTransaction(payment))
+      setAmount('')
+      setMethod('Credit Card')
+      alert('✅ Pago registrado correctamente')
+    } */
+  console.log(error)
   return (
-    <div className="max-w-[750px] mx-auto p-4 sm:p-6">
-      <h1 className="text-xl font-bold mb-4 text-center">Registro de Pago</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div/*  className="max-w-[750px] mx-auto p-4 sm:p-6" */ style={{ maxWidth: '100%', display: 'grid', placeItems: 'center' }}>
+      <h1 className="text-xl font-bold mb-4 text-center" style={{ textAlign: 'center' }}>Lista de productos</h1>
+      {/* <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="number"
           placeholder="Monto"
@@ -50,7 +59,16 @@ const HomePage = () => {
         >
           Registrar Pago
         </button>
-      </form>
+      </form> */}
+      {products.map((prod, idx) => (
+        <div style={{ justifyContent: 'center' }}>
+          <ProductCard key={idx} {...prod} />
+        </div>
+      ))}
+
+      {/*       <p>{products[0]?.name}</p>
+      <p>{products[0]?.description}</p>
+      <p>{products[0]?.stock}</p> */}
     </div>
   )
 }
