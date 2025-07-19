@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { fetchProducts } from '../api/product';
 import ProductCard from '../components/ProductCard';
 import CreditCardModal from '../components/CreditCardModal';
+import PurchaseSummary from '../components/PurchaseSummary';
 
 const HomePage = () => {
   //const dispatch = useDispatch()
@@ -14,6 +15,8 @@ const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [validationError, setValidationError] = useState('');
+  const [showSummary, setShowSummary] = useState(false);
+  const [data, setData] = useState<any>(null)
 
   useEffect(() => {
     fetchProducts()
@@ -49,7 +52,8 @@ const HomePage = () => {
       return;
     }
 
-    console.log('Datos de tarjeta:', data);
+    setData(data)
+    setShowSummary(true)
     console.log('Producto comprado:', selectedProduct);
     setShowModal(false);
   };
@@ -139,7 +143,14 @@ const HomePage = () => {
             OK
           </button>
         </div>
-
+      )}
+      {showSummary && (
+        <PurchaseSummary
+          productName={selectedProduct.name}
+          productPrice={selectedProduct.price}
+          cardNumber={data.cardNumber}
+          onClose={() => setShowSummary(false)}
+        />
       )}
       {/*       <p>{products[0]?.name}</p>
       <p>{products[0]?.description}</p>
