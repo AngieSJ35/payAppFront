@@ -3,6 +3,7 @@ type ProductCardProps = {
     price: number;
     description: string;
     stock: number;
+    onBuy: () => void;
 };
 
 const ProductCard = ({ name, price, description, stock, onBuy }: ProductCardProps) => {

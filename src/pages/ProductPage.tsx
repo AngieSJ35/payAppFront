@@ -4,12 +4,17 @@ import { createTransaction } from '../api/payment';
 import ProductCard from '../components/ProductCard';
 import CreditCardModal from '../components/CreditCardModal';
 import PurchaseSummary from '../components/PurchaseSummary';
-
+type ProductCardProps = {
+  name: string;
+  price: number;
+  description: string;
+  stock: number;
+  onBuy: () => void;
+};
 const HomePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
+  const [products, setProducts] = useState<ProductCardProps[]>([]);
   const [validationError, setValidationError] = useState('');
   const [transactionOK, setTrasactionOK] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
@@ -18,7 +23,6 @@ const HomePage = () => {
   useEffect(() => {
     fetchProducts()
       .then(setProducts)
-      .catch(setError);
   }, []);
 
   const handleComprar = (product: any) => {
@@ -38,7 +42,7 @@ const HomePage = () => {
         setTrasactionOK(false);
       })
       .catch((error) => {
-        setError(error);
+        console.log(error)
         setShowSummary(false);
       });
   };

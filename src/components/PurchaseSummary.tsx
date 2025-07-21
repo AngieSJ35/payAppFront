@@ -3,6 +3,7 @@ type PurchaseSummaryProps = {
   productPrice: number;
   cardNumber: string; // Formateado como "XXXX XXXX XXXX XXXX"
   onClose: () => void;
+  onPay: (e: React.FormEvent) => Promise<void>;
 };
 const DOMICILIO = 6500;
 const calculateSummary = (productPrice: number, card: string) => {
