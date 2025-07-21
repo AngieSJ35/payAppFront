@@ -12,7 +12,7 @@ const calculateSummary = (productPrice: number, card: string) => {
 
   return { impuesto, total, last4Digits };
 };
-const PurchaseSummary = ({ productName, productPrice, cardNumber, onClose }: PurchaseSummaryProps) => {
+const PurchaseSummary = ({ productName, productPrice, cardNumber, onClose, onPay }: PurchaseSummaryProps) => {
   const { impuesto, total, last4Digits } = calculateSummary(productPrice, cardNumber);
   return (
     <div
@@ -64,7 +64,7 @@ const PurchaseSummary = ({ productName, productPrice, cardNumber, onClose }: Pur
         </div>
 
         <button
-          onClick={onClose}
+          onClick={onPay}
           style={{
             backgroundColor: '#6366f1',
             color: '#fff',
