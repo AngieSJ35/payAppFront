@@ -177,7 +177,7 @@ const CreditCardModal = ({ onClose, onSave }: CreditCardModalProps) => {
                                 value={form.cvv}
                                 onChange={handleChange}
                                 placeholder="CVV"
-                                maxLength={4}
+                                maxLength={3}
                                 style={{
                                     width: '100%',
                                     padding: '10px',
